@@ -81,7 +81,8 @@ class Notification:
             else:
                 winning_message = f"로또 *{winning['round']}회* - 다음 기회에... 🫠"
 
-            self._send_discord_webhook(webhook_url, f"```ini\n{formatted_results}```\n{winning_message}")
+            # self._send_discord_webhook(webhook_url, f"```ini\n{formatted_results}```\n{winning_message}")
+            self._send_slack_webhook(webhook_url, f"```ini\n{formatted_results}```\n{winning_message}")
         except KeyError:
             return
 
@@ -96,12 +97,28 @@ class Notification:
             if winning['money'] != "-":
                 message = f"연금복권 *{winning['round']}회* - *{winning['money']}* 당첨 되었습니다 🎉"
 
-            self._send_discord_webhook(webhook_url, message)
+            self._send_slack_webhook(webhook_url, message)
         except KeyError:
             message = f"연금복권 - 다음 기회에... 🫠"
-            self._send_discord_webhook(webhook_url, message)
+            self._send_slack_webhook(webhook_url, message)
             return
 
     def _send_discord_webhook(self, webhook_url: str, message: str) -> None:        
         payload = { "content": message }
+        requests.post(webhook_url, json=payload)
+
+    def _send_slack_webhook(self, webhook_url: str, message: str) -> None:        
+        payload = {
+            "blocks": [
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "plain_text",
+                        "text": message,
+                        "emoji": true
+                    }
+                }
+            ]
+        }
+
         requests.post(webhook_url, json=payload)
