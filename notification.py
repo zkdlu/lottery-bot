@@ -114,8 +114,7 @@ class Notification:
                     "type": "section",
                     "text": {
                         "type": "plain_text",
-                        "text": message,
-                        "emoji": true
+                        "text": message
                     }
                 }
             ]
