@@ -52,7 +52,6 @@ def check():
     username = os.environ.get('USERNAME')
     password = os.environ.get('PASSWORD')
     slack_webhook_url = os.environ.get('SLACK_WEBHOOK_URL') 
-    discord_webhook_url = os.environ.get('DISCORD_WEBHOOK_URL')
 
     globalAuthCtrl = auth.AuthController()
     globalAuthCtrl.login(username, password)
@@ -60,18 +59,14 @@ def check():
     response = check_winning_lotto645(globalAuthCtrl)
     if slack_webhook_url != '':
         send_message(0, 0, response=response, webhook_url=slack_webhook_url)
-    if discord_webhook_url != '':
-        send_message(0, 0, response=response, webhook_url=discord_webhook_url)
 
     time.sleep(10)
     
     response = check_winning_win720(globalAuthCtrl)
     if slack_webhook_url != '':
         send_message(0, 1, response=response, webhook_url=slack_webhook_url)
-    if discord_webhook_url != '':
-        send_message(0, 1, response=response, webhook_url=discord_webhook_url)
 
-def buy(): 
+def buy_lotto():
     
     load_dotenv() 
 
@@ -79,7 +74,6 @@ def buy():
     password = os.environ.get('PASSWORD')
     count = int(os.environ.get('COUNT'))
     slack_webhook_url = os.environ.get('SLACK_WEBHOOK_URL') 
-    discord_webhook_url = os.environ.get('DISCORD_WEBHOOK_URL')
     mode = "AUTO"
 
     globalAuthCtrl = auth.AuthController()
@@ -88,24 +82,32 @@ def buy():
     response = buy_lotto645(globalAuthCtrl, count, mode) 
     if slack_webhook_url != '':
         send_message(1, 0, response=response, webhook_url=slack_webhook_url)
-    if discord_webhook_url != '':
-        send_message(1, 0, response=response, webhook_url=discord_webhook_url)
 
-    time.sleep(10)
-    
+def buy_win():
+
+    load_dotenv()
+
+    username = os.environ.get('USERNAME')
+    password = os.environ.get('PASSWORD')
+    slack_webhook_url = os.environ.get('SLACK_WEBHOOK_URL')
+
+    globalAuthCtrl = auth.AuthController()
+    globalAuthCtrl.login(username, password)
+
     response = buy_win720(globalAuthCtrl, username)
     if slack_webhook_url != '':
         send_message(1, 1, response=response, webhook_url=slack_webhook_url)
-    if discord_webhook_url != '':
-        send_message(1, 1, response=response, webhook_url=discord_webhook_url)
+
 
 def run():
     if len(sys.argv) < 2:
         print("Usage: python controller.py [buy|check]")
         return
 
-    if sys.argv[1] == "buy":
-        buy()
+    if sys.argv[1] == "buy-lotto":
+        buy_lotto()
+    elif sys.argv[1] == "buy-win":
+        buy_win()
     elif sys.argv[1] == "check":
         check()
   
