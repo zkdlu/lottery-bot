@@ -13,3 +13,5 @@
 
 # Reference 
 - https://github.com/roeniss/dhlottery-api
+
+깃헙액션 멈춤 방지 커밋
